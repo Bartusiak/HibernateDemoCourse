@@ -1,5 +1,6 @@
 package com.luv2code.hibernate.demo.entity;
 
+import com.luv2code.hibernate.demo.entity.Instructor;
 import javax.persistence.*;
 
 @Entity
@@ -26,6 +27,23 @@ public class InstructorDetail {
     private String ytChannel;
     @Column(name="hobby")
     private String hobby;
+
+    //add new field for insrtuctor (also add getter/setters)
+
+    //add @OneToOne annotation
+
+    @OneToOne(mappedBy = "instructorDetail", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+                                                            CascadeType.REFRESH})
+
+    private Instructor instructor;
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
 
     public InstructorDetail(){
 
