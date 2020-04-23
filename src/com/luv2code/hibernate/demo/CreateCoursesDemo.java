@@ -1,5 +1,6 @@
 package com.luv2code.hibernate.demo;
 
+import com.luv2code.hibernate.demo.entity.Course;
 import com.luv2code.hibernate.demo.entity.Instructor;
 import com.luv2code.hibernate.demo.entity.InstructorDetail;
 import org.hibernate.Session;
@@ -7,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class GetInstructorDeatailDemo {
+public class CreateCoursesDemo {
 
     public static void main(String[] args){
 
@@ -16,23 +17,33 @@ public class GetInstructorDeatailDemo {
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Instructor.class)
                 .addAnnotatedClass(InstructorDetail.class)
+                .addAnnotatedClass(Course.class)
                 .buildSessionFactory();
         //Create session
         Session session = factory.getCurrentSession();
 
         try{
+            //create the objects
+
+            //associate the objects
+
             //start a transaction
             session.beginTransaction();
 
-            //get the instructor detail object
+            //get the instructor from db
             int theId = 1;
-            InstructorDetail tempInstructorDetail = session.get(InstructorDetail.class, theId);
+            Instructor tempInstructor = session.get(Instructor.class, theId);
 
-            //print the instructor detail
-            System.out.println("tempInstructorDetail: " + tempInstructorDetail);
+            //create some courses
+            Course tempCourse1 = new Course("Air Guitor - for begginers");
+            Course tempCourse2 = new Course("The Pinball");
 
-            //print the associated instructor
-            System.out.println("The associated instructor: " + tempInstructorDetail.getInstructor());
+            //add courses to instructors
+            tempInstructor.add(tempCourse1);
+            tempInstructor.add(tempCourse2);
+            //save the courses
+            session.save(tempCourse1);
+            session.save(tempCourse2);
 
             //commit transaction
             session.getTransaction().commit();
@@ -40,7 +51,7 @@ public class GetInstructorDeatailDemo {
         }catch(Exception e){
             e.printStackTrace();
         }finally {
-            //handle connection leak issue
+            //add clean up code
             session.close();
             factory.close();
         }
