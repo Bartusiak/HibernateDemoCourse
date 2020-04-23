@@ -1,14 +1,12 @@
 package com.luv2code.hibernate.demo;
 
-import com.luv2code.hibernate.demo.entity.Course;
-import com.luv2code.hibernate.demo.entity.Instructor;
-import com.luv2code.hibernate.demo.entity.InstructorDetail;
+import com.luv2code.hibernate.demo.entity.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class DeleteCourseDemo {
+public class GetCoursesForJanDemo {
 
     public static void main(String[] args){
 
@@ -18,27 +16,33 @@ public class DeleteCourseDemo {
                 .addAnnotatedClass(Instructor.class)
                 .addAnnotatedClass(InstructorDetail.class)
                 .addAnnotatedClass(Course.class)
+                .addAnnotatedClass(Review.class)
+                .addAnnotatedClass(Student.class)
                 .buildSessionFactory();
         //Create session
         Session session = factory.getCurrentSession();
 
         try{
+
             //start a transaction
             session.beginTransaction();
 
-            // get a course
-            int theId = 10;
-            Course tempCourse = session.get(Course.class,theId);
-            // delete course
-            System.out.println("Deleting course: " + tempCourse);
-            session.delete(tempCourse);
+            //get the student mary from database
+            int studentId = 1;
+            Student tempStudent = session.get(Student.class,studentId);
+            System.out.println("\nLoaded student: " + tempStudent.getCourses());
+            System.out.println("Courses:" + tempStudent.getCourses());
+
+
+
             //commit transaction
             session.getTransaction().commit();
+
             System.out.println("Done!");
         }catch(Exception e){
             e.printStackTrace();
         }finally {
-            //handle connection leak issue
+            //add clean up code
             session.close();
             factory.close();
         }

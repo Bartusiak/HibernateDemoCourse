@@ -1,15 +1,12 @@
 package com.luv2code.hibernate.demo;
 
-import com.luv2code.hibernate.demo.entity.Course;
-import com.luv2code.hibernate.demo.entity.Instructor;
-import com.luv2code.hibernate.demo.entity.InstructorDetail;
-import com.luv2code.hibernate.demo.entity.Review;
+import com.luv2code.hibernate.demo.entity.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class GetCourseAndReviewsDemo {
+public class AddCoursesForJanDemo {
 
     public static void main(String[] args){
 
@@ -20,8 +17,8 @@ public class GetCourseAndReviewsDemo {
                 .addAnnotatedClass(InstructorDetail.class)
                 .addAnnotatedClass(Course.class)
                 .addAnnotatedClass(Review.class)
+                .addAnnotatedClass(Student.class)
                 .buildSessionFactory();
-
         //Create session
         Session session = factory.getCurrentSession();
 
@@ -30,15 +27,26 @@ public class GetCourseAndReviewsDemo {
             //start a transaction
             session.beginTransaction();
 
-            // get the course
-            int getId = 10;
-            Course tempCourse = session.get(Course.class, getId);
+            //get the student mary from database
+            int studentId = 1;
+            Student tempStudent = session.get(Student.class,studentId);
+            System.out.println("\nLoaded student: " + tempStudent.getCourses());
 
-            // print the course
-            System.out.println(tempCourse);
+            //create more courses
+            Course tempCourse2 = new Course("Unity for Begginers - Making the first game");
+            Course tempCourse3 = new Course("Arkanoid - History course");
 
-            // print the course reviews
-            System.out.println(tempCourse.getReviews());
+            tempCourse2.addStudent(tempStudent);
+            tempCourse3.addStudent(tempStudent);
+
+            System.out.println("\nSaving the course...\n");
+            session.save(tempCourse2);
+            session.save(tempCourse3);
+            System.out.println("Saved the course: " + tempCourse2 + tempCourse3);
+
+            //add student to courses
+
+            //save courses
 
             //commit transaction
             session.getTransaction().commit();
